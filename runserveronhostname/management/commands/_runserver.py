@@ -7,7 +7,8 @@ class PartialRunserverCommand(BaseCommand):
         if not options["addrport"]:
             try:
                 run_on = settings.RUNSERVER_ON
-                options["addrport"] = run_on
+                if run_on:
+                    options["addrport"] = run_on
             except AttributeError:
                 pass
         return super().handle(*args, **options)

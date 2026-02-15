@@ -1,0 +1,32 @@
+[project]
+name = "django-runserveronhostname"
+version = "0.1.0"
+description = "Automatically run the Django dev server on a particular hostname"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "Matt Cooper", email = "vtbassmatt@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "django>=5.0",
+]
+keywords = ["django", "runserver"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Framework :: Django",
+]
+
+[project.urls]
+Homepage = "https://github.com/vtbassmatt/django-runserveronhostname"
+Issues = "https://github.com/vtbassmatt/django-runserveronhostname/issues"
+Repository = "https://github.com/vtbassmatt/django-runserveronhostname.git"
+
+[build-system]
+requires = ["uv_build>=0.8.4,<0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "runserveronhostname"
+module-root = ""

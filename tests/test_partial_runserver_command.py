@@ -64,12 +64,9 @@ class TestPartialRunserverCommand:
             pass
         
         command = TestCommand()
-        command.handle(addrport='')
+        command.handle(addrport='foo')
         
-        # When RUNSERVER_ON is None (default in test settings), addrport becomes None
-        # This could be considered a lurking bug in the app - would expect it to remain empty
-        # but documenting the current behavior here
-        assert captured['options']['addrport'] is None
+        assert captured['options']['addrport'] == 'foo'
     
     @override_settings(RUNSERVER_ON='testproject.localhost:8000')
     def test_handle_with_none_addrport(self):

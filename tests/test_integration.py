@@ -37,7 +37,7 @@ class TestIntegration:
             assert captured['addrport'] == 'integration.localhost:9000'
     
     def test_end_to_end_runserver_without_setting(self):
-        """Test end-to-end flow when RUNSERVER_ON is at its default (None)."""
+        """Test end-to-end flow when RUNSERVER_ON is not set."""
         
         with patch('runserveronhostname.apps.import_module') as mock_import:
             captured = {}
@@ -52,11 +52,9 @@ class TestIntegration:
             mock_import.return_value = mock_module
             
             command = patched_load_command_class('django.core', 'runserver')
-            command.handle(addrport='')
+            command.handle(addrport='foo')
             
-            # Note: When RUNSERVER_ON is None (default test setting), it gets set to None
-            # This is potentially a bug in the app, but testing current behavior
-            assert captured['addrport'] is None
+            assert captured['addrport'] == 'foo'
     
     @override_settings(RUNSERVER_ON='default.localhost:8000')
     def test_end_to_end_with_user_override(self):

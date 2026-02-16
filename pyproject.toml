@@ -1,6 +1,6 @@
 [project]
 name = "django-runserveronhostname"
-version = "0.1.0"
+version = "0.2.0"
 description = "Automatically run the Django dev server on a particular hostname"
 readme = "README.md"
 license = "MIT"

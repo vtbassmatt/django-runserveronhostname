@@ -20,3 +20,15 @@ When you run the dev server (`./manage.py runserver`, `django-admin runserver`, 
 - naive implementation in Django
 - `staticfiles` implementation in Django
 - `daphne`'s runserver override
+
+## Contributing
+
+While I don't mind contributions, I don't really expect any, either. So I don't have great instructions here. It's a really small package, and you can probably stand up a little test app locally with this installed in editable mode.
+
+### Running tests
+
+At time of writing, we have 100% test coverage. That's not necessarily a strict rule, but it sure feels good to have a second set of eyes watching each line.
+
+```shellsession
+% uv sync --extra test && uv run pytest
+```

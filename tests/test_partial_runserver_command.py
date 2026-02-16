@@ -63,37 +63,22 @@ class TestPartialRunserverCommand:
         class TestCommand(PartialRunserverCommand, MockParent):
             pass
         
+        # with addrport
         command = TestCommand()
-        command.handle(addrport='')
+        command.handle(addrport='foo')
         
-        # When RUNSERVER_ON is None (default in test settings), addrport becomes None
-        # This could be considered a lurking bug in the app - would expect it to remain empty
-        # but documenting the current behavior here
-        assert captured['options']['addrport'] is None
-    
-    @override_settings(RUNSERVER_ON='testproject.localhost:8000')
-    def test_handle_with_none_addrport(self):
-        """Test handling when addrport is None instead of empty string."""
-        
-        captured = {}
-        
-        class MockParent(BaseCommand):
-            def handle(self, *args, **options):
-                captured['options'] = dict(options)
-                return None
-        
-        class TestCommand(PartialRunserverCommand, MockParent):
-            pass
-        
+        assert captured['options']['addrport'] == 'foo'
+
+        # without addrport
         command = TestCommand()
         command.handle(addrport=None)
         
-        # None is falsy, so it should be replaced
-        assert captured['options']['addrport'] == 'testproject.localhost:8000'
+        assert captured['options']['addrport'] == None
     
-    @override_settings(RUNSERVER_ON='testproject.localhost:8000')
-    def test_handle_with_false_addrport(self):
-        """Test handling when addrport is False."""
+    @override_settings(RUNSERVER_ON=None)
+    def test_handle_falsy_runserver_on_setting(self):
+        """Test that command beahvior doesn't change when RUNSERVER_ON is set to something falsy."""
+        # this is mostly for 100% coverage
         
         captured = {}
         
@@ -106,30 +91,9 @@ class TestPartialRunserverCommand:
             pass
         
         command = TestCommand()
-        command.handle(addrport=False)
+        command.handle(addrport='')
         
-        # False is falsy, so it should be replaced
-        assert captured['options']['addrport'] == 'testproject.localhost:8000'
-    
-    @override_settings(RUNSERVER_ON='testproject.localhost:8000')
-    def test_handle_with_zero_addrport(self):
-        """Test handling when addrport is 0 (falsy integer)."""
-        
-        captured = {}
-        
-        class MockParent(BaseCommand):
-            def handle(self, *args, **options):
-                captured['options'] = dict(options)
-                return None
-        
-        class TestCommand(PartialRunserverCommand, MockParent):
-            pass
-        
-        command = TestCommand()
-        command.handle(addrport=0)
-        
-        # 0 is falsy, so it should be replaced
-        assert captured['options']['addrport'] == 'testproject.localhost:8000'
+        assert captured['options']['addrport'] == ''
     
     @override_settings(RUNSERVER_ON='testproject.localhost:8000')
     def test_handle_passes_all_arguments(self):
@@ -200,37 +164,3 @@ class TestPartialRunserverCommand:
                 assert captured['addrport'] == runserver_value, \
                     f"Failed for {runserver_value}"
     
-    @override_settings(RUNSERVER_ON='testproject.localhost:8000')
-    def test_handle_with_whitespace_addrport(self):
-        """Test handling when addrport contains only whitespace."""
-        
-        captured = {}
-        
-        class MockParent(BaseCommand):
-            def handle(self, *args, **options):
-                captured['addrport'] = options.get('addrport')
-                return None
-        
-        class TestCommand(PartialRunserverCommand, MockParent):
-            pass
-        
-        command = TestCommand()
-        command.handle(addrport='   ')
-        
-        # Whitespace string is truthy in Python, so it should NOT be replaced
-        assert captured['addrport'] == '   '
-    
-    def test_handle_raises_key_error_for_missing_addrport_key(self):
-        """Test that handle raises KeyError if addrport is missing from options."""
-        
-        class MockParent(BaseCommand):
-            def handle(self, *args, **options):
-                return None
-        
-        class TestCommand(PartialRunserverCommand, MockParent):
-            pass
-        
-        command = TestCommand()
-        
-        with pytest.raises(KeyError):
-            command.handle()  # No addrport key

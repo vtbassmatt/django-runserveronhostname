@@ -32,7 +32,3 @@ LOGGING = {
         'level': 'WARNING',
     },
 }
-
-# This is the setting that the app uses
-# We'll override this in specific tests
-RUNSERVER_ON = None

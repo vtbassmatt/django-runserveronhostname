@@ -75,6 +75,26 @@ class TestPartialRunserverCommand:
         
         assert captured['options']['addrport'] == None
     
+    @override_settings(RUNSERVER_ON=None)
+    def test_handle_falsy_runserver_on_setting(self):
+        """Test that command beahvior doesn't change when RUNSERVER_ON is set to something falsy."""
+        # this is mostly for 100% coverage
+        
+        captured = {}
+        
+        class MockParent(BaseCommand):
+            def handle(self, *args, **options):
+                captured['options'] = dict(options)
+                return None
+        
+        class TestCommand(PartialRunserverCommand, MockParent):
+            pass
+        
+        command = TestCommand()
+        command.handle(addrport='')
+        
+        assert captured['options']['addrport'] == ''
+    
     @override_settings(RUNSERVER_ON='testproject.localhost:8000')
     def test_handle_passes_all_arguments(self):
         """Test that all arguments are passed to parent handle method."""

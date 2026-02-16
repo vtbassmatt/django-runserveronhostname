@@ -63,10 +63,17 @@ class TestPartialRunserverCommand:
         class TestCommand(PartialRunserverCommand, MockParent):
             pass
         
+        # with addrport
         command = TestCommand()
         command.handle(addrport='foo')
         
         assert captured['options']['addrport'] == 'foo'
+
+        # without addrport
+        command = TestCommand()
+        command.handle(addrport=None)
+        
+        assert captured['options']['addrport'] == None
     
     @override_settings(RUNSERVER_ON='testproject.localhost:8000')
     def test_handle_passes_all_arguments(self):

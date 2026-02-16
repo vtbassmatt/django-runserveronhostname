@@ -12,7 +12,7 @@ This package lets me define a desired dev server hostname in my Django settings,
 2. Add `runserveronhostname` to `INSTALLED_APPS` in your Django settings.
 3. Add a setting `RUNSERVER_ON = 'myname.whatever:8000'` (you must include a port number). This could also be used to bind to a particular IP address (`RUNSERVER_ON = '0.0.0.0:8000'`) if you prefer.
 
-Important note: this package doesn't do anything about making sure you can actually bind to the requested name or IP address. You will need to manually add an entry to your hostfile, DNS, etc.
+Important note: this package doesn't do anything about making sure you can actually bind to the requested name or IP address. You will need to manually add an entry to your hostfile, DNS, etc. See the new [hostfile](#hostfile-command) command for some help with that.
 
 ## Usage
 
@@ -20,6 +20,16 @@ When you run the dev server (`./manage.py runserver`, `django-admin runserver`, 
 - naive implementation in Django
 - `staticfiles` implementation in Django
 - `daphne`'s runserver override
+
+### hostfile command
+You can run `./manage.py hostfile` to see whether the hostname you require is listed in your system host file. Right now this only works directly on Linux and macOS, but if you know where your system's hostfile lives, you can point to it with `./manage hostfile --file <path/to/hosts>`.
+
+There's another option you can pass, `--write`, which will spit back the hostfile it finds and add your project's `RUNSERVER_ON` hostname if it doesn't already appear. If you wanted to be really bold, you could do something like:
+
+```shellsession
+# I don't really recommend this, it's not battle-tested
+% sudo ./manage.py hostfile --write >/etc/hosts 
+```
 
 ## Contributing
 
@@ -32,3 +42,7 @@ At time of writing, we have 100% test coverage. That's not necessarily a strict 
 ```shellsession
 % uv sync --extra test && uv run pytest
 ```
+
+### Changelog
+
+See what's changed in each version in the [changelog](CHANGELOG.md).
